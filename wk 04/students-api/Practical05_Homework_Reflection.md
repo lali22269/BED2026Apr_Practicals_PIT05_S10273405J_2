@@ -1,0 +1,18 @@
+1. Separation of Concerns:
+In your own words, explain the distinct responsibilities of the Model, View (the external frontend), and Controller in your final project structure. How does having a separate frontend View (Practical 05) simplify the responsibilities of your backend API?
+
+In my final project, the Model handles all database interactions, the View (separate HTML/CSS/JS files) manages the user interface and data display, and the Controller processes HTTP requests and coordinates between them. Having a separate frontend View in Practical 05 simplifies my backend API because it now only needs to send and receive JSON data instead of serving HTML pages. This means I can test my API easily with Postman, change my frontend design without touching backend code, and potentially create different frontends (like a mobile app) using the same API.
+
+2. Robustness and Security:
+Consider the journey from a simple API (Practical 03) to a more robust one (Practical 04) and a full-stack application (Practical 05). At which stage do you think it became easier to identify and fix bugs related to data handling or API responses? Why?
+
+Identifying bugs became much easier at Practical 04 when I added validation, error handling, and parameterized queries. Before that, errors could appear anywhere and were hard to trace. With validation layers and proper error handling, there are now clear failure points - if invalid data enters, the validation catches it immediately; if there's an SQL issue, parameterized queries provide clear error messages without exposing database structure.
+
+3. Challenges and Problem Solving:
+What was the most challenging aspect for you across Practical 03, 04, and 05? Describe the problem and how you approached solving it. Thinking critically, if you had to add a new feature (e.g., adding a "genre" field to books, or implementing user authentication), how would the current MVC structure with a separate View layer help you approach this task in a more organized and efficient way compared to the initial Practical 03 structure?
+
+The most challenging aspect was implementing proper error handling that gives users useful feedback without exposing sensitive system information. I solved this by creating a centralized error handling system that catches errors, logs them internally, and returns user-friendly messages to the frontend. The MVC structure with a separate View helps tremendously with adding new features like authentication - I would only need to add authentication middleware in the Controller, update the User Model for database queries, and create new frontend pages, all without disrupting existing code.
+
+4. Experiential Learning: How did the hands-on coding and refactoring in these practicals help you understand the concepts of MVC, validation, error handling, and parameterized queries compared to just reading about them?
+
+The hands-on coding in these practicals taught me far more than reading alone ever could. Actually building the project from a simple messy API to a structured full-stack application made me understand why separation of concerns matters. When I experienced bugs from SQL injection firsthand and then fixed them with parameterized queries, the concept became real, not just theoretical. Refactoring my own messy code showed me the practical value of MVC, validation, and error handling in a way that no textbook could match.
