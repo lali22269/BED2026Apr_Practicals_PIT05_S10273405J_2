@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books List</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+      }
+      #booksList {
+        margin-top: 20px;
+      }
+      .book-item {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+      .book-item h3 {
+        margin-top: 0;
+      }
+      .book-item button {
+        margin-right: 5px;
+      }
+      #message {
+        margin-top: 15px;
+        font-weight: bold;
+      } /* Style for the message div */
+    </style>
+  </head>
+  <body>
+    <h1>All Books</h1>
+    <p><a href="create.html">Add New Book</a></p>
+    <button id="fetchBooksBtn">Refresh Books List</button>
+    <div id="message"></div>
+    <div id="booksList">Loading books...</div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

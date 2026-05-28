@@ -1,0 +1,11 @@
+1. Look at the code in the final app.js file (where all logic is in routes and no validation). How easy or difficult is it to read and understand what's happening in each route handler compared to when the database logic was in separate functions?
+
+All database logic (SQL queries) written directly inside the route handlers are easier to read
+
+2. If you found a bug in how books are created in the database, which version of app.js would make it easiest to isolate and fix that bug?
+
+The version with separate functions would be easier ot fix as I could just open for example app.js and just fix the issue. In an all-in-one version I would have to scroll through everything to even isolate the issue which is more time consuming.
+
+3. Did you face any challenges while implementing this practical?
+
+Yes. I faced trouble connecting the dbConfig.js to the SQL server and database as they weren't connecting at all. In the SQL I also faced multiple issues with deleting and recreating the tables dbo.Books. Whenever I typed node app.js in the terminal, I would get an error saying ELOGIN or ETIMEOUT or errors: Array.

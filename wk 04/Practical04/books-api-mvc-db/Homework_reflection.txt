@@ -1,0 +1,106 @@
+Task 1:
+1. What were the main changes you made to refactor the code into MVC architecture? Describe how you moved code between files and folders.
+
+The main changes I made to refactor the API code into MVC architecture involved separating the monolithic app.js file into distinct components based on their responsibilities.
+Folder structure created:
+
+/models - for database logic
+/controllers - for request handling logic
+/routes - for API route definitions
+/middlewares - for validation and authentication
+/config - for configuration files like database connection
+
+Routes: I extracted all route definitions (GET, POST, PUT, DELETE) from app.js and moved them into separate files inside the /routes folder (e.g., bookRoutes.js). Each route file only contains the endpoints and which controller function to call.
+Controllers: I moved all the request handling logic that was previously written directly inside route callbacks into controller files inside /controllers. Each controller function receives req and res objects, calls the appropriate model functions, and sends back responses.
+Models: I extracted all database queries (SQL statements) from the original route handlers and placed them into model files. Each model function handles a specific data operation like getAllBooks(), createBook(), etc.
+Middleware: I moved validation logic that was previously scattered inside route handlers into dedicated middleware files inside /middlewares. This includes input validation using Joi and ID validation.
+Configuration: I moved database connection settings from inline code into a dbConfig.js file inside the /config folder.
+
+Simplified app.js: After all extractions, app.js now only contains:
+
+a. Express initialization
+b. Global middleware registration (express.json, etc.)
+c. Route imports and usage with app.use()
+d. Server startup logic
+e. Graceful shutdown handling
+
+2. What challenges did you face during the refactoring process?
+
+Initially, I had models importing controllers and controllers importing models, which caused errors. I solved this by keeping models completely independent — they don't import controllers at all. Controllers import models, but not vice versa. I wasn't sure whether to put input validation in the controller or in middleware. I decided to create separate middleware files so that validation logic can be reused across multiple routes and kept separate from business logic. When I moved route definitions to separate files, I had to carefully update all references to controller functions. I initially forgot to export some controller functions, which caused "controller is not a function" errors. In the original code, errors were handled with try-catch inside each route. After refactoring, I had to ensure each controller function properly catches errors from the model and sends appropriate responses.
+
+3. How does the MVC structure change the way you think about adding new features or modifying existing ones compared to the previous non-MVC structure?
+
+Before MVC (all in app.js):
+
+Adding a new feature like "search books by author" meant scrolling through hundreds of lines in app.js.
+I had to find where similar routes were defined and copy-paste code.
+I often duplicated database queries because there was no central place for them.
+Modifying one feature risked breaking another because everything was tightly coupled.
+
+After MVC:
+
+When adding a new feature, I first ask: "Does this need a new model method, or can I reuse an existing one?"
+Then I think: "What should the controller validate before calling the model?"
+Finally: "Which route file should this endpoint go into?"
+
+4. In what specific ways do you think the MVC version is more organized or easier to understand and maintain than the previous version where all logic was in app.js?
+
+There are different segments separated for the MVC version and this is easier for organisation and better error correction as compared to all the codes being in app.js as that is more messy
+
+5. Explain how separating concerns (putting database logic in the Model and request handling in the Controller) makes the code better from a development perspective.
+
+a. Single Responsibility Principle
+Each file has one job. Models only care about data — connecting to the database, running queries, and returning data. Controllers only care about HTTP — reading request data, calling the right model functions, and sending responses. This makes each file simpler to understand.
+
+b. Easier testing
+I can test the Model without Express. I just call BookModel.getAllBooks() and check if it returns the right data. I don't need to mock req and res objects. Similarly, I can test Controllers by mocking the Model's responses.
+
+c. Flexibility to change databases
+If I decide to switch from SQL Server to MongoDB, I only rewrite the Model layer. The Controllers and Routes stay exactly the same because they don't care how data is stored — they only care that the Model gives them data.
+
+d. Parallel development
+One developer can work on bookModel.js (optimizing a slow query) while another developer works on bookController.js (adding better error handling). They won't create merge conflicts because they're editing different files.
+
+Task 2:
+1. How does implementing input validation middleware make the API more reliable and user-friendly? Provide an example of invalid input that your validation would now handle.
+
+Input validation middleware makes the API more reliable by ensuring that only properly formatted data reaches the database and business logic. It acts as a gatekeeper that rejects bad requests early.
+
+Benefits for reliability:
+
+Prevents malformed data from being saved to the database
+Reduces errors caused by missing required fields
+Ensures data types are correct (e.g., "year" must be a number, not text)
+Protects against unexpected values that could crash the application
+
+Benefits for user-friendliness:
+
+Users receive clear, specific error messages instead of generic server errors
+Users know exactly which field is wrong and why
+The API fails fast and clearly, saving users time
+
+2. Explain in your own words how parameterized queries prevent SQL injection attacks. Why is this approach fundamentally more secure than building SQL query strings by concatenating variable data?
+
+The database treats the parameters as pure data, not as SQL commands. Even if an attacker tries to inject SQL, it gets treated like literal text — like how a search for "drop table" would just be a search term, not a command to delete anything.
+String concatenation = Writing on a whiteboard where the user's words become part of your instructions
+Parameterized queries = Writing instructions on the whiteboard, then handing the user a sticky note. The sticky note can't change the instructions — it just provides data.
+
+3. Consider a potential security risk for an API (other than SQL injection, e.g., brute-force attacks, exposing sensitive data in responses). How might robust error handling (like not showing detailed error messages to the client) help mitigate such a risk?
+
+Security risk: Information disclosure through detailed error messages
+
+Attackers often use error messages to learn about your system. A detailed error message can reveal:
+Database structure (table names, column names)
+File paths on your server
+Technology stack (Express version, database type)
+Internal logic flow
+
+Brute-force attacks: Generic error messages don't distinguish between "user not found" and "wrong password". Both return the same message: "Invalid credentials". This prevents attackers from knowing if an email exists in the system.
+Path traversal attempts: If an attacker tries ../../config/database.yml, detailed errors might confirm the file exists. Generic errors prevent this feedback.
+API structure probing: Detailed errors might reveal which endpoints exist. Generic 404/500 errors keep the API surface hidden.
+
+Best practices for secure error handling:
+Show generic messages to users (e.g., "Something went wrong")
+Log full details internally for debugging
+Never include stack traces, file paths, or database details in responses
+Use consistent error responses for both "not found" and "access denied" to avoid revealing information

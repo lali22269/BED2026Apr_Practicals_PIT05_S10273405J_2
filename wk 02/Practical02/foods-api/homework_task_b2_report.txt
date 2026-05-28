@@ -1,0 +1,18 @@
+app.use(express.json()) = automatically parses incoming JSON payloads from request bodies and converts them into JavaScript objects
+
+req.body = contains the parsed data sent by the person in the request body used for POST and PUT to create or update data
+
+req.query = Contains key-value pairs from the URL (after ?), used for filtering, searching (typically with GET requests).
+
+req.params.id = Contains parameters extracted from the URL path and :id placeholder, used to identify specific resources for GET, PUT and DELETE operations.
+
+GET = read (retrieve data)
+POST = create (create new data)
+PUT = update (update entire data)
+DELETE = delete (remove data)
+
+200 OK = successfully request
+201 Created = successfully created
+400 Bad Request = server cannot process request cause client sent invalid syntax or malformed data
+404 Not Found = server cannot find requested resources
+500 Internal Server Error = server encounted an unexpected condition that prevented it from fulfilling the request

@@ -1,0 +1,15 @@
+What I have learnt about REST APIs are CRUD (create, read, update, delete)
+
+I also learnt that GET = read (retrieve data)
+                   POST = create (create new data)
+                   PUT = update (update entire data)
+                   DELETE = delete (remove data)
+
+Challenges faced: The only challenged I faced was figuring out when I should edit/add data in params or body
+
+PUT vs POST - how many times PUT is used the output of the data will be the same and only once while the number of times POST is used the output will increase according to that number
+
+Status code 404 Not Found is used when attempting to update a non-existent data
+
+
+
